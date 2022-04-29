@@ -1,0 +1,35 @@
+import { ConfigParams } from 'pip-services3-commons-nodex';
+import { IConfigurable } from 'pip-services3-commons-nodex';
+import { IReferences } from 'pip-services3-commons-nodex';
+import { IReferenceable } from 'pip-services3-commons-nodex';
+import { FilterParams } from 'pip-services3-commons-nodex';
+import { PagingParams } from 'pip-services3-commons-nodex';
+import { DataPage } from 'pip-services3-commons-nodex';
+import { ICommandable } from 'pip-services3-commons-nodex';
+import { CommandSet } from 'pip-services3-commons-nodex';
+import { InvitationV1 } from '../data/version1/InvitationV1';
+import { IInvitationsController } from './IInvitationsController';
+export declare class InvitationsController implements IConfigurable, IReferenceable, ICommandable, IInvitationsController {
+    private static _defaultConfig;
+    private _dependencyResolver;
+    private _messageResolver;
+    private _logger;
+    private _persistence;
+    private _rolesClient;
+    private _messageDistributionClient;
+    private _messageConnector;
+    private _commandSet;
+    private _expireTimeout;
+    configure(config: ConfigParams): void;
+    setReferences(references: IReferences): void;
+    getCommandSet(): CommandSet;
+    getInvitations(correlationId: string, filter: FilterParams, paging: PagingParams): Promise<DataPage<InvitationV1>>;
+    getInvitationById(correlationId: string, id: string): Promise<InvitationV1>;
+    createInvitation(correlationId: string, invitation: InvitationV1): Promise<InvitationV1>;
+    deleteInvitationById(correlationId: string, id: string): Promise<InvitationV1>;
+    activateInvitations(correlationId: string, email: string, userId: string): Promise<InvitationV1[]>;
+    approveInvitation(correlationId: string, invitationId: string, role: string): Promise<InvitationV1>;
+    denyInvitation(correlationId: string, invitationId: string): Promise<InvitationV1>;
+    resendInvitation(correlationId: string, invitationId: string): Promise<InvitationV1>;
+    notifyInvitation(correlationId: string, invitation: InvitationV1): Promise<void>;
+}

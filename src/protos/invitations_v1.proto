@@ -1,0 +1,136 @@
+// Copyright 2015 gRPC authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "pip-services.users.invitations.version1";
+option java_outer_classname = "InvitationsProtoV1";
+option objc_class_prefix = "ACCOUNTS_CMD_V1";
+
+package invitations_v1;
+
+message ErrorDescription {
+  string type = 1;
+  string category = 2;
+  string code = 3;
+  string correlation_id = 4;
+  string status = 5;
+  string message = 6;
+  string cause = 7;
+  string stack_trace = 8;
+  map<string, string> details = 9;
+}
+
+message PagingParams {
+    int64 skip = 1;
+    int32 take = 2;
+    bool total = 3;
+}
+
+message Invitation {
+    string id = 1;
+
+    string action = 2;
+    string org_id = 3;
+    string org_name = 4;
+    string role = 5;
+    string language = 6;
+
+    string create_time = 7;
+    string creator_name = 8;
+    string creator_id = 9;
+
+    string invitee_name = 10;
+    string invitee_email = 11;
+    string invitee_id = 12;
+    string invitee_about = 13;
+
+    string sent_time = 14;
+    string expire_time = 15;
+}
+
+message InvitationPage {
+    int64 total = 1;
+    repeated Invitation data = 2;
+}
+
+// The invitations service definition.
+service Invitations {
+  rpc get_invitations (InvitationPageRequest) returns (InvitationPageReply) {}
+  rpc get_invitation_by_id (InvitationIdRequest) returns (InvitationObjectReply) {}
+  rpc create_invitation (InvitationObjectRequest) returns (InvitationObjectReply) {}
+  rpc delete_invitation_by_id (InvitationIdRequest) returns (InvitationObjectReply) {}
+  rpc activate_invitations (InvitationActivateRequest) returns (InvitationListReply) {}
+  rpc approve_invitation (InvitationApproveRequest) returns (InvitationObjectReply) {}
+  rpc deny_invitation (InvitationIdRequest) returns (InvitationObjectReply) {}
+  rpc resend_invitation (InvitationIdRequest) returns (InvitationObjectReply) {}
+  rpc notify_invitation (InvitationObjectRequest) returns (InvitationEmptyReply) {}
+}
+
+// The request message containing the invitation page request.
+message InvitationPageRequest {
+  string correlation_id = 1;
+  map<string, string> filter = 2;
+  PagingParams paging = 3;
+}
+
+// The response message containing the invitation page response
+message InvitationPageReply {
+  ErrorDescription error = 1;
+  InvitationPage page = 2;
+}
+
+// The request message containing the invitation id request.
+message InvitationIdRequest {
+  string correlation_id = 1;
+  string invitation_id = 2;
+}
+
+// The request message containing the invitation activate request.
+message InvitationActivateRequest {
+  string correlation_id = 1;
+  string email = 2;
+  string user_id = 3;
+}
+
+// The request message containing the invitation approve request.
+message InvitationApproveRequest {
+  string correlation_id = 1;
+  string invitation_id = 2;
+  string role = 3;
+}
+
+// The request message containing the invitation object request.
+message InvitationObjectRequest {
+  string correlation_id = 1;
+  Invitation invitation = 2;
+}
+
+// The response message containing the invitation object response
+message InvitationObjectReply {
+  ErrorDescription error = 1;
+  Invitation invitation = 2;
+}
+
+// The response message containing the invitations list response
+message InvitationListReply {
+  ErrorDescription error = 1;
+  repeated Invitation invitations = 2;
+}
+
+// The response message containing the invitations empty response
+message InvitationEmptyReply {
+  ErrorDescription error = 1;
+}

@@ -1,0 +1,1 @@
+export { InvitationsServiceFactory } from './InvitationsServiceFactory';

@@ -1,0 +1,67 @@
+version: '3.3'
+
+services:
+
+  test:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: ${IMAGE:-pipdevs/app}
+    links:
+      - mongo
+      - roles
+      - msgdistribution
+    environment:
+      - MONGO_SERVICE_URI=
+      - MONGO_SERVICE_HOST=mongo
+      - MONGO_SERVICE_PORT=27017
+      - MONGO_DB=app
+      - ROLES_SERVICE_HOST=roles
+      - ROLES_SERVICE_PORT=8080
+      - MESSAGE_DISTRIBUTION_SERVICE_HOST=roles
+      - MESSAGE_DISTRIBUTION_SERVICE_PORT=8080
+      - HTTP_ENABLED=true
+      - GRPC_ENABLED=true
+    ports:
+      - "8080:8080"
+      - "8090:8090"
+
+  roles:
+    image: pipdevs/service-roles-node:latest
+    # image: pipdevs/service-roles-nodex:latest
+    links:
+      - mongo
+    environment:
+      - MONGO_SERVICE_URI=
+      - MONGO_SERVICE_HOST=mongo
+      - MONGO_SERVICE_PORT=27017
+      - MONGO_DB=app
+      - COUCHBASE_SERVICE_URI=
+      - COUCHBASE_SERVICE_HOST=couchbase
+      - COUCHBASE_SERVICE_PORT=8091
+      - COUCHBASE_USER=Administrator
+      - COUCHBASE_PASS=password
+      - HTTP_ENABLED=true
+      - GRPC_ENABLED=true
+
+  msgdistribution:
+    image: pipdevs/service-msgdistribution-node:latest
+    # image: pipdevs/service-msgdistribution-nodex:latest
+    links:
+      - email
+    environment:
+      - EMAIL_SERVICE_HOST=email
+      - EMAIL_SERVICE_PORT=8080
+      - HTTP_ENABLED=true
+      - GRPC_ENABLED=true
+
+  email:
+    image: pipdevs/service-email-node:latest
+    # image: pipdevs/service-email-nodex:latest
+    environment:
+      - EMAIL_DISABLED=true
+      - HTTP_ENABLED=true
+      - GRPC_ENABLED=true
+
+  mongo:
+    image: mongo:latest
