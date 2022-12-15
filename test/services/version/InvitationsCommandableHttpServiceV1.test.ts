@@ -8,7 +8,7 @@ import { References } from 'pip-services3-commons-nodex';
 import { InvitationV1 } from '../../../src/data/version1/InvitationV1';
 import { InvitationsMemoryPersistence } from '../../../src/persistence/InvitationsMemoryPersistence';
 import { InvitationsController } from '../../../src/logic/InvitationsController';
-import { InvitationsHttpServiceV1 } from '../../../src/services/version1/InvitationsHttpServiceV1';
+import { InvitationsCommandableHttpServiceV1 } from '../../../src/services/version1/InvitationsCommandableHttpServiceV1';
 
 import { MessageDistributionNullClientV1 } from 'client-msgdistribution-node';
 import { RolesNullClientV1 } from 'client-roles-node';
@@ -37,15 +37,15 @@ let INVITATION2: InvitationV1 = {
     invitee_email: 'test2@somewhere.com'
 };
 
-suite('InvitationsHttpServiceV1', ()=> {
-    let service: InvitationsHttpServiceV1;
+suite('InvitationsCommandableHttpServiceV1', ()=> {
+    let service: InvitationsCommandableHttpServiceV1;
     let rest: any;
 
     suiteSetup(async () => {
         let persistence = new InvitationsMemoryPersistence();
         let controller = new InvitationsController();
 
-        service = new InvitationsHttpServiceV1();
+        service = new InvitationsCommandableHttpServiceV1();
         service.configure(httpConfig);
 
         let references: References = References.fromTuples(
@@ -53,7 +53,7 @@ suite('InvitationsHttpServiceV1', ()=> {
             new Descriptor('service-roles', 'client', 'null', 'default', '1.0'), new RolesNullClientV1(),
             new Descriptor('service-invitations', 'persistence', 'memory', 'default', '1.0'), persistence,
             new Descriptor('service-invitations', 'controller', 'default', 'default', '1.0'), controller,
-            new Descriptor('service-invitations', 'service', 'http', 'default', '1.0'), service
+            new Descriptor('service-invitations', 'service', 'commandable-http', 'default', '1.0'), service
         );
         controller.setReferences(references);
         service.setReferences(references);
