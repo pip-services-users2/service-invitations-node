@@ -2,13 +2,15 @@ version: '3.3'
 
 services:
 
-  test:
+  app:
     build:
       context: ..
       dockerfile: docker/Dockerfile
     image: ${IMAGE:-pipservices/app}
     links:
       - mongo
+      - roles
+      - msgdistribution
     environment:
       - MONGO_SERVICE_URI=
       - MONGO_SERVICE_HOST=mongo
@@ -16,9 +18,35 @@ services:
       - MONGO_DB=app
       - HTTP_ENABLED=true
       - GRPC_ENABLED=true
+      - ROLES_SERVICE_HOST=roles
+      - ROLES_SERVICE_PORT=8080
+      - MESSAGE_DISTRIBUTION_SERVICE_HOST=msgdistribution
+      - MESSAGE_DISTRIBUTION_SERVICE_PORT=8080
     ports:
       - "8080:8080"
       - "8090:8090"
 
+  msgdistribution:
+    image: pipservices/service-msgdistribution-node:1.1.0-2
+    links:
+      - mongo
+    environment:
+      - MONGO_SERVICE_HOST=mongo
+      - MONGO_SERVICE_PORT=27017
+      - MONGO_DB=app
+      - HTTP_ENABLED=true
+      - GRPC_ENABLED=true
+
+  roles:
+    image: pipservices/service-roles-node:1.1.0-4
+    links:
+      - mongo
+    environment:
+      - MONGO_SERVICE_HOST=mongo
+      - MONGO_SERVICE_PORT=27017
+      - MONGO_DB=app
+      - HTTP_ENABLED=true
+      - GRPC_ENABLED=true
+    
   mongo:
     image: mongo:latest
