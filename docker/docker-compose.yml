@@ -23,22 +23,12 @@ services:
 
   msgdistribution:
     image: pipservices/service-msgdistribution-node:1.1.0-2
-    links:
-      - mongo
     environment:
-      - MONGO_SERVICE_HOST=mongo
-      - MONGO_SERVICE_PORT=27017
-      - MONGO_DB=app
       - HTTP_ENABLED=true
       - GRPC_ENABLED=true
 
   roles:
     image: pipservices/service-roles-node:1.1.0-4
-    links:
-      - mongo
     environment:
-      - MONGO_SERVICE_HOST=mongo
-      - MONGO_SERVICE_PORT=27017
-      - MONGO_DB=app
       - HTTP_ENABLED=true
       - GRPC_ENABLED=true
