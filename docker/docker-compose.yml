@@ -8,14 +8,9 @@ services:
       dockerfile: docker/Dockerfile
     image: ${IMAGE:-pipservices/app}
     links:
-      - mongo
       - roles
       - msgdistribution
     environment:
-      - MONGO_SERVICE_URI=
-      - MONGO_SERVICE_HOST=mongo
-      - MONGO_SERVICE_PORT=27017
-      - MONGO_DB=app
       - HTTP_ENABLED=true
       - GRPC_ENABLED=true
       - ROLES_SERVICE_HOST=roles
@@ -47,6 +42,3 @@ services:
       - MONGO_DB=app
       - HTTP_ENABLED=true
       - GRPC_ENABLED=true
-    
-  mongo:
-    image: mongo:latest
