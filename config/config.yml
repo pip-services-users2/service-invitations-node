@@ -50,7 +50,7 @@
     port: {{{ROLES_SERVICE_PORT}}}
 
 # Message distribution client
-- descriptor: "service-msgdistribution:client:http:default:1.0"
+- descriptor: "service-msgdistribution:client:commandable-http:default:1.0"
   connection:
     protocol: "http"
     host: {{{MESSAGE_DISTRIBUTION_SERVICE_HOST}}}
