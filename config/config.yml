@@ -43,7 +43,7 @@
 {{/unless}}{{/unless}}{{/unless}}{{/unless}}
 
 # Roles client
-- descriptor: "service-roles:client:http:default:1.0"
+- descriptor: "service-roles:client:commandable-http:default:1.0"
   connection:
     protocol: "http"
     host: {{{ROLES_SERVICE_HOST}}}
